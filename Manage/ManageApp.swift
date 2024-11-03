@@ -6,12 +6,27 @@
 //
 
 import SwiftUI
+import Data
+import Domain
+import Resolver
+import SwiftData
 
 @main
 struct ManageApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @ObservedObject var appState = AppState()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SplashView(viewModel: DefaultSplashViewModel())
+                .environmentObject(appState)
         }
+        .modelContainer(for: [LeavesList.self])
     }
+}
+
+final class AppState: ObservableObject {
+    static let shared = AppState()
+    @Published var rootViewId = UUID()
+    @Published var swipeEnabled = true
 }
